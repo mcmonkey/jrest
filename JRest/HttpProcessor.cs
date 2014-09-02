@@ -8,7 +8,7 @@ using System.Threading;
 using System.Web;
 using System.Diagnostics;
 
-namespace Http
+namespace JRest
 {
 	public class HttpProcessor
 	{

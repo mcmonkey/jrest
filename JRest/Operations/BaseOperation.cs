@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Heritage.Transactions;
-using Http;
-
-namespace Heritage
+namespace JRest.Operations
 {
 	public abstract class BaseOperation
 	{
 
-		private Http.HttpResponse.ResponseCode m_response = Http.HttpResponse.ResponseCode.OK;
+		private JRest.HttpResponse.ResponseCode m_response = JRest.HttpResponse.ResponseCode.OK;
 
 		private object m_jsonPayload = null;
 
@@ -27,14 +24,14 @@ namespace Heritage
 			
 		}
 
-		internal Http.HttpResponse.ResponseCode ResponseCode ()
+		internal JRest.HttpResponse.ResponseCode ResponseCode ()
 		{
 			return this.m_response;
 		}
 
 		protected void Error ()
 		{
-			m_response = Http.HttpResponse.ResponseCode.ERROR;
+			m_response = JRest.HttpResponse.ResponseCode.ERROR;
 		}
 
 		protected void JSONReponse ( object payload )
@@ -47,7 +44,7 @@ namespace Heritage
 		internal string GetResponse ()
 		{
 			var s = new System.Web.Script.Serialization.JavaScriptSerializer ();
-			return s.Serialize ( new { reponse = this.m_jsonPayload, inbox = new { } } );
+			return s.Serialize ( this.m_jsonPayload );
 		}
 	}
 }

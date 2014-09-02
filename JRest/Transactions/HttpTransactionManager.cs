@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Http;
 using System.Reflection;
 using System.Diagnostics;
+using JRest.Operations;
 
-namespace Heritage.Transactions
+namespace JRest.Transactions
 {
 	public class HttpTransactionManager
 	{
@@ -70,58 +70,71 @@ namespace Heritage.Transactions
 					operation.request = processor;
 
 					MethodInfo mi = t.GetMethod ( _method, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public );
-					ParameterInfo[] pi = mi.GetParameters ();
-					object[] arguments = new object[pi.Length];
-					int i = 0;
-					foreach ( var param in pi )
+					if ( mi == null )
 					{
-						string url_value;
-						Type param_type = param.ParameterType;
-						object argument = null;
-						if ( processor.url_params.TryGetValue ( param.Name, out url_value ) )
+						processor.Response.Code = HttpResponse.ResponseCode.NOT_FOUND;
+						processor.Response.Body = "Could not find method : " + _method + " on " + path;
+						processor.SendResponse ();
+					}
+					else
+					{
+						ParameterInfo[] pi = mi.GetParameters ();
+						object[] arguments = new object[pi.Length];
+						int i = 0;
+						foreach ( var param in pi )
 						{
-							if ( param_type == typeof ( string ) )
+							string url_value;
+							Type param_type = param.ParameterType;
+							object argument = null;
+							if ( processor.url_params.TryGetValue ( param.Name, out url_value ) )
 							{
-								argument = url_value;
-							}
-							else if ( param_type == typeof ( int ) )
-							{
-								argument = int.Parse ( url_value );
-							}
-							else if ( param_type == typeof ( float ) )
-							{
-								argument = float.Parse ( url_value );
+								if ( param_type == typeof ( string ) )
+								{
+									argument = url_value;
+								}
+								else if ( param_type == typeof ( int ) )
+								{
+									argument = int.Parse ( url_value );
+								}
+								else if ( param_type == typeof ( float ) )
+								{
+									argument = float.Parse ( url_value );
+								}
+								else
+								{
+									argument = null;
+								}
 							}
 							else
 							{
-								argument = null;
+								// TODO: Come up with error code for missing parameters. 
+								// Reflection appears to be ok with coercing null to 0, but I'm not.
+
+							}
+							arguments[i] = argument;
+							i++;
+						}
+
+						Exception rethrow = null;
+						try
+						{
+							operation.Before ();
+							mi.Invoke ( operation, arguments );
+							operation.After ();
+							processor.Response.Code = operation.ResponseCode ();
+							processor.Response.Body = operation.GetResponse ();
+							foreach ( var header in operation.Headers )
+							{
+								processor.Response.SetHeader ( header.Key, header.Value );
 							}
 						}
-						arguments[i] = argument;
-						i++;
-					}
-
-					Exception rethrow = null;
-					try
-					{
-						operation.Before ();
-						mi.Invoke ( operation, arguments );
-						operation.After ();
-						processor.Response.Code = operation.ResponseCode ();
-						processor.Response.Body = operation.GetResponse ();
-						foreach ( var header in operation.Headers )
+						catch ( Exception e )
 						{
-							processor.Response.SetHeader ( header.Key, header.Value );
+							rethrow = e;
 						}
+
+						if ( rethrow != null ) throw rethrow;
 					}
-					catch ( Exception e )
-					{
-						rethrow = e;
-					}
-
-					if ( rethrow != null ) throw rethrow;
-
-
 				}
 			}
 			catch ( Exception e )
@@ -133,7 +146,7 @@ namespace Heritage.Transactions
 
 		}
 
-		internal void Start ( int port )
+		public void Start ( int port )
 		{
 			HttpServer s = new HttpServer ( 8181 );
 			s.GET = OnGet;

@@ -8,7 +8,7 @@ using System.Net;
 using System.IO;
 using System.Collections.Concurrent;
 
-namespace Http
+namespace JRest
 {
 	public delegate void ProcessHandler ( HttpProcessor processor );
 

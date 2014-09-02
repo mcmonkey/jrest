@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRest", "JRest\JRest.csproj", "{80C00EBF-8CDA-4E3B-B584-B6A865AC40E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRestExample", "JRestExample\JRestExample.csproj", "{2D1A1E4A-BBF6-423F-A258-143A284B59B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,16 @@ Global
 		{80C00EBF-8CDA-4E3B-B584-B6A865AC40E4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{80C00EBF-8CDA-4E3B-B584-B6A865AC40E4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{80C00EBF-8CDA-4E3B-B584-B6A865AC40E4}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Debug|x86.ActiveCfg = Debug|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Debug|x86.Build.0 = Debug|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Release|Any CPU.ActiveCfg = Release|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Release|Mixed Platforms.Build.0 = Release|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Release|x86.ActiveCfg = Release|x86
+		{2D1A1E4A-BBF6-423F-A258-143A284B59B1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Http
-{
+namespace JRest {
 	public class HttpResponse
 	{
 		public enum ResponseCode
