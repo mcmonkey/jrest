@@ -119,8 +119,7 @@ namespace JRest.Transactions
 						Exception rethrow = null;
 						try
 						{
-							operation.init ( processor.headers );
-							operation.parse_headers ();
+							operation.init ( );
 							operation.Before ();
 							mi.Invoke ( operation, arguments );
 							operation.After ();

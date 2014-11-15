@@ -5,8 +5,8 @@ using System.Text;
 
 namespace JRest.Operations
 {
-	public interface IRequestHeader
+	public interface IOperationPlugin
 	{
-		void parse_headers (IDictionary<string, string> headers);
+		void init_request (HttpProcessor request);
 	}
 }
