@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using JRest.Operations;
 using JRest.Util;
+using JRest;
 
 namespace JRestExample.Operations
 {
-	public class AuthHeaders : IRequestHeader
+	public class AuthHeaders : IOperationPlugin
 	{
 		public string user_name { get; private set; }
 
@@ -15,10 +16,10 @@ namespace JRestExample.Operations
 
 		public string auth_type { get; private set; }
 
-		public void parse_headers (IDictionary<string, string> headers)
+		public void init_request (HttpProcessor processor)
 		{
 			string header_val;
-			if ( headers.TryGetValue ( "Authorization", out header_val ) )
+			if ( processor.headers.TryGetValue ( "Authorization", out header_val ) )
 			{
 				var split = header_val.Trim().Split ( ' ' );
 				var type = split[0];

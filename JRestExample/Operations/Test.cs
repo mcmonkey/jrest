@@ -12,7 +12,7 @@ namespace JRestExample.Operations
 
 		public Test ()
 		{
-			m_auth = add_request_header ( new AuthHeaders () );
+			m_auth = add_plugin ( new AuthHeaders () );
 		}
 
 		public void example ( int i, string s )
