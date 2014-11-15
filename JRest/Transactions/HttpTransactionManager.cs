@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 using JRest.Operations;
+using System.Security.Cryptography.X509Certificates;
 
 namespace JRest.Transactions
 {
@@ -118,6 +119,8 @@ namespace JRest.Transactions
 						Exception rethrow = null;
 						try
 						{
+							operation.init ( processor.headers );
+							operation.parse_headers ();
 							operation.Before ();
 							mi.Invoke ( operation, arguments );
 							operation.After ();
@@ -146,9 +149,9 @@ namespace JRest.Transactions
 
 		}
 
-		public void Start ( int port )
+		public void Start ( int port, X509Certificate ssl = null )
 		{
-			HttpServer s = new HttpServer ( 8181 );
+			HttpServer s = new HttpServer ( 8181, ssl );
 			s.GET = OnGet;
 			s.Start ();
 		}

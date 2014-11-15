@@ -39,6 +39,8 @@ namespace JRest
 
 		private long m_perfStart = -1;
 
+		private Stream m_stream;
+
 		public int ID
 		{
 			get { return m_order; }
@@ -51,7 +53,7 @@ namespace JRest
 			m_order = order;
 			Log ( "ID: {0}", m_order );
 			PerfNote ( "Constructor" );
-			m_client.GetStream ();
+			m_stream = server.make_stream ( client.GetStream () );
 		}
 
 
@@ -60,7 +62,7 @@ namespace JRest
 			if ( !m_responseSent )
 			{
 				PerfNote ( "Start-Response" );
-				Response.Write ( m_client.GetStream () );
+				Response.Write ( m_stream );
 				PerfNote ( "Finish-Response" );
 				m_client.Close ();
 				m_responseSent = true;
@@ -83,7 +85,7 @@ namespace JRest
 		{
 			PerfNote ( "Start" );
 			Log ( "Processing {0}", m_client.Client.RemoteEndPoint );
-			StreamReader reader = new StreamReader ( m_client.GetStream () );
+			StreamReader reader = new StreamReader ( m_stream  );
 			string line1 = null;
 			try
 			{
@@ -107,6 +109,7 @@ namespace JRest
 					var request_type = line1.Substring(0, space);
 					if(VALID_REQUESTS.Contains(request_type))
 					{
+						
 						this.request_type = request_type;
 						var resource = line1.Substring(space + 1, end - (space + 1));
 						var split_resource = resource.Split(QUESTION_MARK, 2);

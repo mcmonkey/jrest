@@ -7,6 +7,8 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using System.Collections.Concurrent;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace JRest
 {
@@ -14,7 +16,9 @@ namespace JRest
 
 	public class HttpServer
 	{
-		private int m_port;
+		public const int DEFAULT_PORT = 8080;
+
+		private int m_port = DEFAULT_PORT;
 
 		public List<Thread> operationThreads = new List<Thread>();
 
@@ -33,10 +37,24 @@ namespace JRest
 
 		private int m_order = 0;
 
+		private X509Certificate ssl_cert = null;
 
-		public HttpServer ( int port = 8080 )
+		public HttpServer () { }
+
+		public HttpServer ( int port )
 		{
 			m_port = port;
+		}
+
+		public HttpServer ( X509Certificate ssl )
+		{
+			this.ssl_cert = ssl;
+		}
+
+		public HttpServer ( int port, X509Certificate ssl )
+		{
+			this.m_port = port;
+			this.ssl_cert = ssl;
 		}
 
 		public void Start ()
@@ -230,6 +248,15 @@ namespace JRest
 			internal ConcurrentQueue<HttpProcessor> queue = new ConcurrentQueue<HttpProcessor>();
 
 			internal EventWaitHandle wait = new EventWaitHandle(true, EventResetMode.AutoReset);
+		}
+
+		internal Stream make_stream ( Stream base_stream )
+		{
+			if ( ssl_cert == null ) return base_stream;
+
+			SslStream ssl_stream = new SslStream ( base_stream );
+			ssl_stream.AuthenticateAsServer ( ssl_cert );
+			return ssl_stream;
 		}
 	}
 }
